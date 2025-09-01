@@ -20,14 +20,16 @@ const Signup = () => {
 
     try {
       const res = await axios.post('http://localhost:3000/api/auth/register', {name, email, password}, {
-        credientials: true
+        withCredentials: true
       });
 
       toast.success(res.data.message);
       navigate('/login');
-    } catch(e) {
-      console.log(e);
-      toast.error(e.response.data.message)
+    } catch(error: unknown) {
+      const axiosError = error as AxiosError<{message: string}>
+
+      if(!axiosError.response)  { toast.error(axiosError.message) } 
+      if(axiosError.response)  { toast.error(axiosError.response?.data?.message) } 
     }
   }
 
